@@ -28,9 +28,16 @@
             max-width: 350px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             transition: transform 0.2s;
+            position: relative;
         }
         .contact:hover, .contact:active {
             transform: scale(1.05);
+        }
+        .contact span {
+            font-size: 16px;
+        }
+        .masked-num {
+            color: #ddd !important;
         }
         .website { 
             display: block; 
@@ -58,9 +65,35 @@
 </head>
 <body>
     <h1>Choose who to call:</h1>
-    <a href="tel:+918856093580" class="contact person1">Ritwik Jarulkar<br><span style="font-size:16px;">+91 88560 93580</span></a>
-    <a href="tel:+917038252813" class="contact person2">Vijay Mahanur<br><span style="font-size:16px;">+91 70382 52813</span></a>
+    <a href="tel:+918856093580" class="contact person1" data-full-num="+91 88560 93580">
+        Ritwik Jarulkar<br><span class="masked-num">+91 ***** 3580</span>
+    </a>
+    <a href="tel:+917038252813" class="contact person2" data-full-num="+91 70382 52813">
+        Vijay Mahanur<br><span class="masked-num">+91 ***** 2813</span>
+    </a>
     <a href="https://vrmedirent.in/" target="_blank" class="website">Visit VR Medirent Website</a>
     <p style="color:#666; font-size:14px; margin-top:30px;">Tap to dial • Works on all phones</p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contacts = document.querySelectorAll('.contact');
+            contacts.forEach(contact => {
+                contact.addEventListener('click', function(e) {
+                    // Optional: Briefly show full number on tap before dialing (for reassurance)
+                    const span = this.querySelector('span');
+                    const fullNum = this.getAttribute('data-full-num');
+                    if (fullNum && span) {
+                        span.textContent = fullNum;
+                        span.classList.remove('masked-num');
+                        // Reset after short delay (dialing happens instantly)
+                        setTimeout(() => {
+                            span.textContent = span.textContent.replace(/(\+91\s)\d{5}/, '$1*****');
+                            span.classList.add('masked-num');
+                        }, 500);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
